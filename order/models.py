@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String
+import datetime
+
+from sqlalchemy import Column, Integer, String, DateTime
 from database import Base
 from sqlalchemy import Enum
 import enum
@@ -18,3 +20,4 @@ class Order(Base):
     stripe_session_id = Column(String, nullable=True)
     stripe_session_url = Column(String, nullable=True)
     payment_status = Column(Enum(PaymentStatus), default=PaymentStatus.UNPAID, nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
