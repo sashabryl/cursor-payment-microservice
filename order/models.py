@@ -1,5 +1,11 @@
 from sqlalchemy import Column, Integer, String
 from database import Base
+from sqlalchemy import Enum
+import enum
+
+class PaymentStatus(enum.Enum):
+    UNPAID = "UNPAID"
+    PAID = "PAID"
 
 class Order(Base):
     __tablename__ = 'orders'
@@ -11,4 +17,4 @@ class Order(Base):
     user_id = Column(Integer, nullable=False)
     stripe_session_id = Column(String, nullable=True)
     stripe_session_url = Column(String, nullable=True)
-
+    payment_status = Column(Enum(PaymentStatus), default=PaymentStatus.UNPAID, nullable=False)
