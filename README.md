@@ -8,5 +8,5 @@ This is a microservice that handles payment and order operations for the Curson 
 * Run ```docer-compose up```
 
 ## Demo
-![screenshot](Screenshot_2024-02-26_12-10-50.png)
+![screenshot](screenshot.png)
 
