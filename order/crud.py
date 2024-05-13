@@ -16,10 +16,6 @@ async def create_order(order_data: schemas.OrderCreate, session):
     session.add(new_order)
     await session.commit()
     await session.refresh(new_order)
-    stripe_utils.check_payment_status.apply_async(
-      (new_order.id, new_order.stripe_session_id),
-       countdown=180
-      )
     return schemas.Order.from_orm(new_order)
 
 async def get_order_by_id(order_id: int, session):
@@ -55,4 +51,3 @@ async def delete_order(order_id: int, session):
         return True
     except NoResultFound:
         return False
-

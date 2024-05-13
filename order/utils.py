@@ -2,7 +2,6 @@ import stripe
 from order.schemas import OrderCreate
 from fastapi import HTTPException
 from settings import settings
-from celery import shared_task
 from order.models import Order, PaymentStatus
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -33,21 +32,3 @@ async def create_checkout_session(order_data: OrderCreate) -> dict:
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-@shared_task
-async def check_payment_status(order_id: int, stripe_session_id: str):
-    async with AsyncSessionLocal() as db:
-        try:
-            session = await stripe.checkout.Session.retrieve(stripe_session_id)
-            if session.payment_status == "paid":
-                # Update the order status in the database to PAID
-                result = await db.execute(select(Order).filter(Order.id == order_id))
-                order = result.scalar_one()
-                order.payment_status = PaymentStatus.PAID
-                await db.commit()
-                return {"status": "Payment successful", "order_id": order_id}
-            else:
-                return {"status": "Payment not completed", "order_id": order_id}
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
-
