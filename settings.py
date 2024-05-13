@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     admin_email: str
     database_url: str = "postgresql+asyncpg://user:password@localhost/dbname"
     secret_key: str
+    stripe_secret_key: str
 
     class Config:
         env_file = ".env"

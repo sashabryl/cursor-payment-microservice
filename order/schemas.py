@@ -1,23 +1,31 @@
-from pydantic import BaseModel
+import datetime
+
+from pydantic import BaseModel, field_validator
 from order.models import PaymentStatus
 
 
 class OrderCreate(BaseModel):
     product_id: int
-    quantity: int
+    product_quantity: int
+    product_total: int
     user_id: int
 
 
-class OrderList(BaseModel):
+class Order(BaseModel):
     id: int
     product_id: int
-    quantity: int
+    product_quantity: int
+    product_total: int
     user_id: int
-    created_at: str
+    created_at: datetime.datetime
     payment_status: PaymentStatus
+    stripe_session_id: str
+    stripe_session_url: str
 
     class Config:
         from_attributes = True
-        json_encoders = {
-            datetime: lambda v: v.strftime("%Y-%m-%d %H:%M:%S")
-        }
+    
+    @field_validator("created_at")
+    @classmethod
+    def validate_created_at(cls, v: datetime.datetime):
+        return v.strftime("%Y/%m/%d, %H:%M")
