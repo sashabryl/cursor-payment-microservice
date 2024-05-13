@@ -20,7 +20,9 @@ async def create_order(order_data: schemas.OrderCreate, session):
 
 async def get_order_by_id(order_id: int, session):
     try:
-        result = await session.execute(select(models.Order).filter(models.Order.id == order_id))
+        result = await session.execute(
+            select(models.Order).filter(models.Order.id == order_id)
+        )
         order = result.scalar_one()
         return order
     except NoResultFound:
@@ -33,7 +35,9 @@ async def list_orders(session):
 
 async def update_order_payment_status(order_id: int, new_status: str, session):
     try:
-        result = await session.execute(select(models.Order).filter(models.Order.id == order_id))
+        result = await session.execute(
+            select(models.Order).filter(models.Order.id == order_id)
+        )
         order = result.scalar_one()
         order.payment_status = new_status
         await session.commit()
@@ -44,7 +48,9 @@ async def update_order_payment_status(order_id: int, new_status: str, session):
 
 async def delete_order(order_id: int, session):
     try:
-        result = await session.execute(select(models.Order).filter(models.Order.id == order_id))
+        result = await session.execute(
+            select(models.Order).filter(models.Order.id == order_id)
+        )
         order = result.scalar_one()
         await session.delete(order)
         await session.commit()
